@@ -12,6 +12,7 @@ writes them to RESULTS/section7.json (RESULTS defaults to results/ beside this f
 """
 import json
 import os
+import warnings
 from pathlib import Path
 
 import numpy as np
@@ -20,7 +21,8 @@ import psycopg
 
 RESULTS = Path(os.environ.get('RESULTS', Path(__file__).with_name('results')))
 RESULTS.mkdir(parents=True, exist_ok=True)
-rng = np.random.default_rng(1508)
+# pandas reads through a psycopg connection, which it reads correctly but warns about
+warnings.filterwarnings('ignore', message='pandas only supports SQLAlchemy')
 CLASSES = ['below 0.5 kn', '0.5 to 3 kn', '3 kn or more']
 
 with psycopg.connect() as conn:
@@ -59,10 +61,12 @@ pw = pw.merge(speed[['gapid', 'cls']], on='gapid', how='left')
 
 
 def boot_mean_ci(d):
-    """Mean of d and its 95% percentile-bootstrap interval over 2,000 resamples of windows.
+    """Mean of d and its 95% percentile-bootstrap interval over 2,000 resamples of windows, drawn
+    with the same seed for every comparison, so that an interval does not depend on the others.
     The repository has no bootstrap routine: benchmark/metrics.py holds the point summaries of
     #aggregate only, beside which this one is written."""
     d = np.asarray(d)
+    rng = np.random.default_rng(1508)
     idx = rng.integers(0, len(d), size=(2000, len(d)))
     m = d[idx].mean(1)
     return float(d.mean()), float(np.percentile(m, 2.5)), float(np.percentile(m, 97.5))
