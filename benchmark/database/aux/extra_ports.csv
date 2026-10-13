@@ -1,0 +1,5 @@
+id,port_id,data_src_c,port_coor_,cntr_code,port_name,rep_mar_l,source,traffic,x,y
+6,DKAIT,0,,DK,,Asnæs Inter Terminal,Inter Terminals Nordics,1,630819.189339,6170167.818642
+34,DKEIT,0,,DK,,Ensted Inter Terminal,Inter Terminals Nordics,1,528207.376524,6097369.058034
+112,DKSIT,0,,DK,,Stigsnaes Inter Terminal,UN/LOCODE,1,642139.023347,6119322.829963
+131,DKTHR,0,,DK,,Tunnel Port Rødby,Tunnel Harbour Rødbyhavn,1,651744.846209,6059263.828173
