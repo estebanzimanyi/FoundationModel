@@ -18,7 +18,8 @@
 #   8  winspeed.sql, analyze.py         Tables db-errors and db-unitraj, and the values of
 #                                       Figs. 11 and 12, in RESULTS/section7.{txt,json}
 #      figures.py           Figs. 11 and 12, in RESULTS/figures/ (needs pdflatex)
-#   9  synthetic.py         Table synthetic, in RESULTS/synthetic.txt
+#   9  synthetic.py         Table synthetic, in RESULTS/synthetic.{txt,json}; with CROSSDOMAIN=1,
+#                           02_context.sql, 03_descriptions.sql, and embed.py on its stretches
 #  10  06_exact.sql         the bounds on area entry, in RESULTS/exact.txt (CROSSDOMAIN=1)
 # The published checkpoint loads only with the model code of commit 8fc3ca2 of this repository,
 # which is checked out into $DATA/thesis-8fc3ca2; UniTraj is cloned from Yasoz/UniTraj into
@@ -122,7 +123,18 @@ step 08_analyze "$PYTHON" analyze.py
 cp "$RESULTS/log/08_analyze.log" "$RESULTS/section7.txt"
 step 08_figures "$PYTHON" figures.py
 
-# 9. synthetic gaps
+# 9. synthetic gaps: the stretches, with the descriptions of their positions for 'crossdomain'
+synth_points() {
+  "$PYTHON" synthetic.py points
+  if [ "$CROSSDOMAIN" = 1 ]; then
+    $PSQL -v points=SynthPoints -v gaps=SynthGaps -v context=SynthContext -f 02_context.sql
+    $PSQL -v context=SynthContext -v descriptor=SynthDescriptor -f 03_descriptions.sql
+    DESCRIPTOR=SynthDescriptor EMBEDDING=SynthEmbedding "$PYTHON" embed.py
+  else
+    $PSQL -q -c "DROP TABLE IF EXISTS SynthEmbedding"
+  fi
+}
+step 09_synthpoints synth_points
 step 09_synthetic "$PYTHON" synthetic.py
 cp "$RESULTS/log/09_synthetic.log" "$RESULTS/synthetic.txt"
 

@@ -14,13 +14,25 @@
 -- so the labels that depend on them ('berthed', 'open_anchorage', 'communication_gap') do not
 -- occur, and the currents are rendered as the template renders a missing value.
 --
+-- The context is read from PointContext and the descriptions written to PointDescriptor; the psql
+-- variables context and descriptor name other tables, as for the stretches of synthetic.py.
+--
 --   psql -d ais -f 03_descriptions.sql
+--   psql -d ais -v context=SynthContext -v descriptor=SynthDescriptor -f 03_descriptions.sql
 
 \set ON_ERROR_STOP on
+\if :{?context}
+\else
+  \set context PointContext
+\endif
+\if :{?descriptor}
+\else
+  \set descriptor PointDescriptor
+\endif
 SET TimeZone = 'UTC';
 
-DROP TABLE IF EXISTS PointDescriptor CASCADE;
-CREATE TABLE PointDescriptor AS
+DROP TABLE IF EXISTS :descriptor CASCADE;
+CREATE TABLE :descriptor AS
 WITH Local AS (
   SELECT c.*,
     c.T AT TIME ZONE CASE c.EEZ
@@ -58,7 +70,7 @@ WITH Local AS (
     round((c.PortDist / 1852)::numeric, 2) AS PortNm,
     round(((c.Heading - c.COG + 180) - 360 * floor((c.Heading - c.COG + 180) / 360) - 180)
       ::numeric, 2) AS Leeway
-  FROM PointContext c ),
+  FROM :context c ),
 Slots AS (
   SELECT l.*, extract(isodow FROM LocalT)::int - 1 AS Dow, extract(hour FROM LocalT)::int AS Hour,
     CASE WHEN extract(month FROM LocalT) IN (3, 4, 5) THEN 'spring'
@@ -112,6 +124,6 @@ SELECT GapId, PointIdx, concat_ws(' ',
     coalesce('water depth ' || round(Depth::numeric) || ' m', 'water depth unknown'),
     'geohash ' || ST_GeoHash(GeomLonLat, 7)))) AS Description
 FROM Slots;
-ALTER TABLE PointDescriptor ADD PRIMARY KEY (GapId, PointIdx);
+ALTER TABLE :descriptor ADD PRIMARY KEY (GapId, PointIdx);
 
-SELECT Description FROM PointDescriptor ORDER BY GapId, PointIdx LIMIT 3;
+SELECT Description FROM :descriptor ORDER BY GapId, PointIdx LIMIT 3;
