@@ -96,7 +96,7 @@ labels = [f'{task.capitalize()}, {c}' for task, c in ROWS]
 # Fig. 11a: crossdomain against kinematic and coordinates
 if 'crossdomain' in res['models']:
     fig = plt.figure(figsize=(TW, 2.45))
-    axes = (fig.add_axes([0.345, 0.21, 0.27, 0.74]), fig.add_axes([0.70, 0.21, 0.21, 0.74]))
+    axes = (fig.add_axes([0.335, 0.21, 0.24, 0.74]), fig.add_axes([0.745, 0.21, 0.185, 0.74]))
     for ax, b in zip(axes, ('kinematic', 'coordinates')):
         paired_axis(ax, [(0, 'crossdomain', comparisons('crossdomain', b))],
                     f'{tex("crossdomain")} $-$\n{tex(b)} (m)')
@@ -107,13 +107,13 @@ if 'crossdomain' in res['models']:
 # Fig. 11b: the three UniTraj variants against kinematic, crossdomain and coordinates
 VERSUS = [b for b in ('kinematic', 'crossdomain', 'coordinates') if b in res['models']]
 fig = plt.figure(figsize=(TW, 3.3))
-axes = [fig.add_axes([0.30 + k * 0.235, 0.17, 0.16, 0.70]) for k in range(len(VERSUS))]
+axes = [fig.add_axes([0.29 + k * 0.255, 0.17, 0.14, 0.70]) for k in range(len(VERSUS))]
 for ax, b in zip(axes, VERSUS):
     paired_axis(ax, [(off, u, comparisons(u, b)) for off, u in zip((-0.27, 0, 0.27), UNITRAJ)],
                 f'UniTraj $-$\n{tex(b)} (m)')
     ax.set_xscale('symlog', linthresh=100, linscale=1)
     ax.set_xticks([-100, 0, 1000])
-    ax.set_xticklabels(['$-10^2$', '0', '$10^3$'])
+    ax.set_xticklabels(['$-10^2$', '', '$10^3$'])  # zero is the dashed line
     ax.set_xticks([100], minor=True)
 axes[0].set_yticklabels(labels)
 for ax in axes[1:]:
