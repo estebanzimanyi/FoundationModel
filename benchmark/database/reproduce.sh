@@ -115,7 +115,7 @@ step 06_unitraj-wt env NORM=worldtrace MODEL_NAME=unitraj-wt "$PYTHON" run_unitr
 
 # 7-8. errors, the reference, and the results
 step 07_evaluate $PSQL -f 05_evaluate.sql
-step 07_kinematic $PSQL -f kinematic.sql
+step 07_kinematic $PSQL -v model=kinematic -f kinematic.sql
 step 08_winspeed $PSQL -f winspeed.sql
 step 08_analyze "$PYTHON" analyze.py
 cp "$RESULTS/log/08_analyze.log" "$RESULTS/section7.txt"
