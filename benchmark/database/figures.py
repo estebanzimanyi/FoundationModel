@@ -5,8 +5,8 @@ PDF files to RESULTS/figures/ (RESULTS defaults to results/ beside this file):
                              class of mean speed, with the share of windows in which 'crossdomain'
                              is better (drawn only when 'crossdomain' was run);
   errors_paired_unitraj.pdf  Fig. 11b, the same differences between each UniTraj variant and
-                             'kinematic' and 'coordinates', on a scale linear within 100 m and
-                             logarithmic beyond;
+                             'kinematic', 'crossdomain' and 'coordinates', on a scale linear within
+                             100 m and logarithmic beyond;
   errors_isolation.pdf       Fig. 12a, the median recovery error of the moving vessels against the
                              number of minutes to the nearest visible position;
   errors_horizon.pdf         Fig. 12b, the median prediction error against the minutes after the
@@ -104,17 +104,20 @@ if 'crossdomain' in res['models']:
     axes[1].set_yticklabels([])
     save(fig, 'errors_paired')
 
-# Fig. 11b: the three UniTraj variants against kinematic and coordinates
+# Fig. 11b: the three UniTraj variants against kinematic, crossdomain and coordinates
+VERSUS = [b for b in ('kinematic', 'crossdomain', 'coordinates') if b in res['models']]
 fig = plt.figure(figsize=(TW, 3.3))
-axes = (fig.add_axes([0.345, 0.17, 0.25, 0.70]), fig.add_axes([0.675, 0.17, 0.25, 0.70]))
-for ax, b in zip(axes, ('kinematic', 'coordinates')):
+axes = [fig.add_axes([0.30 + k * 0.235, 0.17, 0.16, 0.70]) for k in range(len(VERSUS))]
+for ax, b in zip(axes, VERSUS):
     paired_axis(ax, [(off, u, comparisons(u, b)) for off, u in zip((-0.27, 0, 0.27), UNITRAJ)],
                 f'UniTraj $-$\n{tex(b)} (m)')
     ax.set_xscale('symlog', linthresh=100, linscale=1)
-    ax.set_xticks([-100, 0, 100, 1000])
-    ax.set_xticklabels(['$-100$', '0', '100', '1000'])
+    ax.set_xticks([-100, 0, 1000])
+    ax.set_xticklabels(['$-10^2$', '0', '$10^3$'])
+    ax.set_xticks([100], minor=True)
 axes[0].set_yticklabels(labels)
-axes[1].set_yticklabels([])
+for ax in axes[1:]:
+    ax.set_yticklabels([])
 fig.legend(handles=[Line2D([], [], ls='', ms=3.5, color=STYLE[u]['color'], marker=STYLE[u]['marker'],
                            label=tex(u)) for u in UNITRAJ],
            loc='upper center', bbox_to_anchor=(0.62, 0.995), ncol=3, frameon=False, handletextpad=0.2,

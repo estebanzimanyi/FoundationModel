@@ -74,7 +74,8 @@ def boot_mean_ci(d):
 
 # 3. window-paired differences: Fig. errors-paired (crossdomain) and Table db-unitraj (UniTraj)
 PAIRS = [('crossdomain', 'kinematic'), ('crossdomain', 'coordinates'), ('coordinates', 'kinematic')]
-PAIRS += [(u, r) for u in ('unitraj', 'unitraj-sd', 'unitraj-wt') for r in ('kinematic', 'coordinates')]
+PAIRS += [(u, r) for u in ('unitraj', 'unitraj-sd', 'unitraj-wt')
+          for r in ('kinematic', 'crossdomain', 'coordinates')]
 res['paired'] = {}
 print('Window-paired differences in meters, first minus second: mean [95% CI], share of windows '
       'in which the first is better')
