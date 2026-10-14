@@ -18,6 +18,7 @@ writes the results to `benchmark/database/results/`:
 | File | Content |
 |---|---|
 | `section7.txt`, `section7.json` | Table db-errors, the window-paired differences of Fig. errors-paired and Table db-unitraj by speed class, the error curves of the moving vessels of Fig. errors-curves, and the travel ratios of the predictions |
+| `figures/` | Figs. 11 and 12, drawn with the PGF backend of matplotlib, which needs `pdflatex` |
 | `synthetic.txt` | Table synthetic, the synthetic gaps of 5 to 120 minutes on moving vessels |
 | `exact.txt` | the bounds on area entry (with `CROSSDOMAIN=1`) |
 | `log/` | the output of every step |
@@ -30,7 +31,7 @@ together with the reference layers listed in `fetch_data.sh` and `fetch_context.
 
 - PostgreSQL with PostGIS and MobilityDB 1.3 or later, in a database the libpq variables name
   (`PGDATABASE`, default `ais`, created if absent; `PGHOST`, `PGPORT`, `PGUSER`);
-- `psql`, `createdb`, `curl`, `unzip`, `git`, and GDAL's `ogr2ogr`;
+- `psql`, `createdb`, `curl`, `unzip`, `git`, GDAL's `ogr2ogr`, and `pdflatex` for the figures;
 - Python 3.10 or later with the packages of `requirements.txt`, given by `PYTHON` (default
   `python3`); a GPU makes the models faster but is not needed.
 
@@ -71,7 +72,7 @@ CROSSDOMAIN=1 bash benchmark/database/reproduce.sh
 | 5 | `04_masks.sql` | EvalMasks, ModelInput |
 | 6 | `run_model.py`, `run_unitraj.py` | ReconstructedLonLat |
 | 7 | `05_evaluate.sql`, `kinematic.sql` | Reconstructed, Errors |
-| 8 | `winspeed.sql`, `analyze.py` | WinSpeed, `results/section7.*` |
+| 8 | `winspeed.sql`, `analyze.py`, `figures.py` | WinSpeed, `results/section7.*`, `results/figures/` |
 | 9 | `synthetic.py` | `results/synthetic.txt` |
 | 10 | `06_exact.sql` | GapPaths, GapAreas, `results/exact.txt` |
 

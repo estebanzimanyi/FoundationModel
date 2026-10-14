@@ -15,8 +15,9 @@
 #   6  run_model.py         'coordinates' (and 'crossdomain'), the published checkpoint
 #      run_unitraj.py       'unitraj', 'unitraj-sd', 'unitraj-wt', UniTraj zero-shot
 #   7  05_evaluate.sql, kinematic.sql   Reconstructed, Errors, and the reference 'kinematic'
-#   8  winspeed.sql, analyze.py         Tables db-errors and db-unitraj, Figs. errors-paired
-#                                       and errors-curves, in RESULTS/section7.{txt,json}
+#   8  winspeed.sql, analyze.py         Tables db-errors and db-unitraj, and the values of
+#                                       Figs. 11 and 12, in RESULTS/section7.{txt,json}
+#      figures.py           Figs. 11 and 12, in RESULTS/figures/ (needs pdflatex)
 #   9  synthetic.py         Table synthetic, in RESULTS/synthetic.txt
 #  10  06_exact.sql         the bounds on area entry, in RESULTS/exact.txt (CROSSDOMAIN=1)
 # The published checkpoint loads only with the model code of commit 8fc3ca2 of this repository,
@@ -119,6 +120,7 @@ step 07_kinematic $PSQL -v model=kinematic -f kinematic.sql
 step 08_winspeed $PSQL -f winspeed.sql
 step 08_analyze "$PYTHON" analyze.py
 cp "$RESULTS/log/08_analyze.log" "$RESULTS/section7.txt"
+step 08_figures "$PYTHON" figures.py
 
 # 9. synthetic gaps
 step 09_synthetic "$PYTHON" synthetic.py
