@@ -19,7 +19,7 @@ writes the results to `benchmark/database/results/`:
 |---|---|
 | `section7.txt`, `section7.json` | Table db-errors, the window-paired differences of Fig. errors-paired and Table db-unitraj by speed class, the error curves of the moving vessels of Fig. errors-curves, and the travel ratios of the predictions |
 | `figures/` | Figs. 11 and 12, drawn with the PGF backend of matplotlib, which needs `pdflatex` |
-| `synthetic.txt` | Table synthetic, the synthetic gaps of 5 to 120 minutes on moving vessels |
+| `synthetic.txt`, `synthetic.json` | Table synthetic, the synthetic gaps of 5 to 120 minutes on moving vessels, reconstructed by `crossdomain` (with `CROSSDOMAIN=1`), `coordinates`, `kinematic`, and the three UniTraj normalizations |
 | `exact.txt` | the bounds on area entry (with `CROSSDOMAIN=1`) |
 | `log/` | the output of every step |
 
@@ -73,7 +73,7 @@ CROSSDOMAIN=1 bash benchmark/database/reproduce.sh
 | 6 | `run_model.py`, `run_unitraj.py` | ReconstructedLonLat |
 | 7 | `05_evaluate.sql`, `kinematic.sql` | Reconstructed, Errors |
 | 8 | `winspeed.sql`, `analyze.py`, `figures.py` | WinSpeed, `results/section7.*`, `results/figures/` |
-| 9 | `synthetic.py` | `results/synthetic.txt` |
+| 9 | `synthetic.py` (with `CROSSDOMAIN=1`, also `02_context.sql`, `03_descriptions.sql`, `embed.py`) | SynthGaps, SynthPoints (SynthContext, SynthDescriptor, SynthEmbedding), `results/synthetic.*` |
 | 10 | `06_exact.sql` | GapPaths, GapAreas, `results/exact.txt` |
 
 Each script states at its top what it computes and how to run it alone.
